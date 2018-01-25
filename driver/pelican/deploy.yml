@@ -6,3 +6,4 @@ memAlloc: 512M
 cpuShares: 512
 includedFiles: [params.yml]
 autoRestart: true
+volumes: [pelican_wal]

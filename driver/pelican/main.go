@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"strings"
 	"time"
 
+	bw2 "github.com/gtfierro/bw2bind"
 	"github.com/immesys/spawnpoint/spawnable"
-	bw2 "gopkg.in/immesys/bw2bind.v5"
 )
 
 const TSTAT_PO_DF = "2.1.1.0"
@@ -29,6 +30,9 @@ func main() {
 	bwClient := bw2.ConnectOrExit("")
 	bwClient.OverrideAutoChainTo(true)
 	bwClient.SetEntityFromEnvironOrExit()
+	if err := bwClient.EnableWAL("/srv/pelican_wal"); err != nil {
+		log.Fatal("WAL error", err)
+	}
 
 	params := spawnable.GetParamsOrExit()
 	baseURI := params.MustString("svc_base_uri")
@@ -147,7 +151,7 @@ func main() {
 					fmt.Printf("Failed to create msgpack PO: %v", err)
 					done <- true
 				}
-				currentIface.PublishSignal("info", po)
+				currentIface.PublishSignalReliable("info", po)
 				time.Sleep(pollInt)
 			}
 		}()
