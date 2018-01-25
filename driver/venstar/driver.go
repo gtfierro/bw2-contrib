@@ -10,8 +10,8 @@ import (
 	"sync"
 	"time"
 
+	bw2 "github.com/gtfierro/bw2bind"
 	"github.com/satori/go.uuid"
-	bw2 "gopkg.in/immesys/bw2bind.v5"
 )
 
 const (
@@ -293,7 +293,7 @@ func (d *Driver) Scrape() {
 	}
 	fmt.Printf("%+v\n", inf)
 
-	d.iface.PublishSignal("info", po)
+	d.iface.PublishSignalReliable("info", po)
 	xbosPO := NewXbosInfoPO(
 		inf.Time,
 		inf.SpaceTemp,
@@ -304,7 +304,7 @@ func (d *Driver) Scrape() {
 		inf.Fan == 1,
 		inf.Mode,
 		inf.State)
-	d.xbos_iface.PublishSignal("info", xbosPO)
+	d.xbos_iface.PublishSignalReliable("info", xbosPO)
 	d.lastheat = inf.HeatTemp
 	d.lastcool = inf.CoolTemp
 	d.lastfan = inf.Fan == 1

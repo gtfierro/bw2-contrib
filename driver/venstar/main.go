@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net"
 	"strings"
 	"time"
 
+	"github.com/gtfierro/bw2bind"
 	"github.com/immesys/spawnpoint/spawnable"
-	"gopkg.in/immesys/bw2bind.v5"
 
 	"golang.org/x/net/ipv4"
 )
@@ -16,6 +17,9 @@ func main() {
 	bwc := bw2bind.ConnectOrExit("")
 	bwc.OverrideAutoChainTo(true)
 	bwc.SetEntityFromEnvironOrExit()
+	if err := bwc.EnableWAL("/srv/venstar_wal"); err != nil {
+		log.Fatal("WAL error: ", err)
+	}
 
 	params := spawnable.GetParamsOrExit()
 	baseURI := params.MustString("svc_base_uri")

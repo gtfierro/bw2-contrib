@@ -7,3 +7,4 @@ useHostNet: true
 cpuShares: 512
 includedFiles: [params.yml]
 autoRestart: true
+volumes: [venstar_wal]
